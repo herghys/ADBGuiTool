@@ -43,10 +43,15 @@
             this.textSelectedID = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();
             this.btnCheckDevice = new System.Windows.Forms.Button();
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.groupBox3 = new System.Windows.Forms.GroupBox();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             this.panel2 = new System.Windows.Forms.Panel();
+            this.selectAPKDialog = new System.Windows.Forms.OpenFileDialog();
+            this.groupBox4 = new System.Windows.Forms.GroupBox();
+            this.buttonClearAPK = new System.Windows.Forms.Button();
+            this.fileListBox = new System.Windows.Forms.CheckedListBox();
+            this.buttonInstallAPK = new System.Windows.Forms.Button();
+            this.buttonBrowseAPK = new System.Windows.Forms.Button();
+            this.label4 = new System.Windows.Forms.Label();
+            this.selectFileDialog = new System.Windows.Forms.OpenFileDialog();
             this.groupBox1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainer1)).BeginInit();
             this.splitContainer1.Panel1.SuspendLayout();
@@ -54,9 +59,8 @@
             this.splitContainer1.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.deviceGridView)).BeginInit();
             this.groupBox2.SuspendLayout();
-            this.panel1.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
             this.panel2.SuspendLayout();
+            this.groupBox4.SuspendLayout();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -245,32 +249,6 @@
             this.btnCheckDevice.UseVisualStyleBackColor = true;
             this.btnCheckDevice.Click += new System.EventHandler(this.CheckDevice_Clicked);
             // 
-            // panel1
-            // 
-            this.panel1.Controls.Add(this.groupBox3);
-            this.panel1.Location = new System.Drawing.Point(3, 3);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(200, 100);
-            this.panel1.TabIndex = 2;
-            // 
-            // groupBox3
-            // 
-            this.groupBox3.Dock = System.Windows.Forms.DockStyle.Bottom;
-            this.groupBox3.Location = new System.Drawing.Point(0, 0);
-            this.groupBox3.Name = "groupBox3";
-            this.groupBox3.Size = new System.Drawing.Size(200, 100);
-            this.groupBox3.TabIndex = 2;
-            this.groupBox3.TabStop = false;
-            this.groupBox3.Text = "groupBox3";
-            // 
-            // flowLayoutPanel1
-            // 
-            this.flowLayoutPanel1.Controls.Add(this.panel1);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(15, 390);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(200, 159);
-            this.flowLayoutPanel1.TabIndex = 3;
-            // 
             // panel2
             // 
             this.panel2.Controls.Add(this.groupBox1);
@@ -279,13 +257,88 @@
             this.panel2.Size = new System.Drawing.Size(403, 248);
             this.panel2.TabIndex = 4;
             // 
+            // selectAPKDialog
+            // 
+            this.selectAPKDialog.Filter = "Application Package (.apk, .xapk)|*.apk;*.xapk;*.APK;*.XAPK";
+            this.selectAPKDialog.Multiselect = true;
+            this.selectAPKDialog.ShowHelp = true;
+            this.selectAPKDialog.Title = "Select APK Files";
+            this.selectAPKDialog.FileOk += new System.ComponentModel.CancelEventHandler(this.SelectAPK_OK);
+            // 
+            // groupBox4
+            // 
+            this.groupBox4.Controls.Add(this.buttonClearAPK);
+            this.groupBox4.Controls.Add(this.fileListBox);
+            this.groupBox4.Controls.Add(this.buttonInstallAPK);
+            this.groupBox4.Controls.Add(this.buttonBrowseAPK);
+            this.groupBox4.Controls.Add(this.label4);
+            this.groupBox4.Location = new System.Drawing.Point(436, 12);
+            this.groupBox4.Name = "groupBox4";
+            this.groupBox4.Size = new System.Drawing.Size(336, 168);
+            this.groupBox4.TabIndex = 0;
+            this.groupBox4.TabStop = false;
+            this.groupBox4.Text = "Install APK";
+            // 
+            // buttonClearAPK
+            // 
+            this.buttonClearAPK.Location = new System.Drawing.Point(112, 17);
+            this.buttonClearAPK.Name = "buttonClearAPK";
+            this.buttonClearAPK.Size = new System.Drawing.Size(103, 33);
+            this.buttonClearAPK.TabIndex = 5;
+            this.buttonClearAPK.Text = "Clear Files";
+            this.buttonClearAPK.UseVisualStyleBackColor = true;
+            this.buttonClearAPK.Click += new System.EventHandler(this.ClearAPK_Clicked);
+            // 
+            // fileListBox
+            // 
+            this.fileListBox.FormattingEnabled = true;
+            this.fileListBox.Location = new System.Drawing.Point(6, 71);
+            this.fileListBox.Name = "fileListBox";
+            this.fileListBox.Size = new System.Drawing.Size(324, 94);
+            this.fileListBox.TabIndex = 4;
+            // 
+            // buttonInstallAPK
+            // 
+            this.buttonInstallAPK.Location = new System.Drawing.Point(221, 17);
+            this.buttonInstallAPK.Name = "buttonInstallAPK";
+            this.buttonInstallAPK.Size = new System.Drawing.Size(109, 32);
+            this.buttonInstallAPK.TabIndex = 3;
+            this.buttonInstallAPK.Text = "Install";
+            this.buttonInstallAPK.UseVisualStyleBackColor = true;
+            this.buttonInstallAPK.Click += new System.EventHandler(this.InstallAPK_Clicked);
+            // 
+            // buttonBrowseAPK
+            // 
+            this.buttonBrowseAPK.Location = new System.Drawing.Point(6, 17);
+            this.buttonBrowseAPK.Name = "buttonBrowseAPK";
+            this.buttonBrowseAPK.Size = new System.Drawing.Size(100, 33);
+            this.buttonBrowseAPK.TabIndex = 2;
+            this.buttonBrowseAPK.Text = "Select Files";
+            this.buttonBrowseAPK.UseVisualStyleBackColor = true;
+            this.buttonBrowseAPK.Click += new System.EventHandler(this.SelectAPK_Clicked);
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(6, 53);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(121, 15);
+            this.label4.TabIndex = 1;
+            this.label4.Text = "Applications to Install";
+            // 
+            // selectFileDialog
+            // 
+            this.selectFileDialog.Filter = "All Files|*.*";
+            this.selectFileDialog.Multiselect = true;
+            this.selectFileDialog.Title = "Select Files";
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(784, 561);
+            this.Controls.Add(this.groupBox4);
             this.Controls.Add(this.panel2);
-            this.Controls.Add(this.flowLayoutPanel1);
             this.Name = "MainForm";
             this.Text = "ADB GUI Tools";
             this.groupBox1.ResumeLayout(false);
@@ -297,9 +350,9 @@
             ((System.ComponentModel.ISupportInitialize)(this.deviceGridView)).EndInit();
             this.groupBox2.ResumeLayout(false);
             this.groupBox2.PerformLayout();
-            this.panel1.ResumeLayout(false);
-            this.flowLayoutPanel1.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
+            this.groupBox4.ResumeLayout(false);
+            this.groupBox4.PerformLayout();
             this.ResumeLayout(false);
 
         }
@@ -321,9 +374,14 @@
         private DataGridViewTextBoxColumn DeviceID;
         private DataGridViewTextBoxColumn DeviceName;
         private DataGridViewTextBoxColumn DeviceModel;
-        private Panel panel1;
-        private GroupBox groupBox3;
-        private FlowLayoutPanel flowLayoutPanel1;
         private Panel panel2;
+        private OpenFileDialog selectAPKDialog;
+        private GroupBox groupBox4;
+        private OpenFileDialog selectFileDialog;
+        private Label label4;
+        private Button buttonInstallAPK;
+        private Button buttonBrowseAPK;
+        private CheckedListBox fileListBox;
+        private Button buttonClearAPK;
     }
 }

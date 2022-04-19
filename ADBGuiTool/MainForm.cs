@@ -1,5 +1,6 @@
 using ADBGuiTool.Data;
 using ADBGuiTool.Utilities;
+using System.ComponentModel;
 using System.Diagnostics;
 
 namespace ADBGuiTool
@@ -8,24 +9,44 @@ namespace ADBGuiTool
     {
         AdbClient client = new AdbClient();
         List<Device> devices = new List<Device>();
+        BindingList<string> filesBinding = new BindingList<string>();
+
+
         string selectedID, selectedName, selectedModel;
         DataGridViewRow selectedRow;
+        bool isEmpty = true;
 
         public MainForm()
         {
             InitializeComponent();
+            filesBinding.AllowRemove = true;
         }
 
-        void ClearData()
+        void ClearDeviceData()
         {
             if (devices.Count > 0)
             devices.Clear();
         }
 
-        private void CheckDevice_Clicked(object sender, EventArgs e)
+        void ClearFileData()
         {
-            ClearData();
-            client.GetDevicesList(OnGetDevice);
+            filesBinding.Clear();
+            ShowData();
+        }
+
+        void PopulateDataListBox()
+        {
+
+            foreach (string files in selectAPKDialog.FileNames)
+            {
+                filesBinding.Add(files);
+            }
+            ShowData();
+        }
+
+        void ShowData()
+        {
+            fileListBox.DataSource = filesBinding;
         }
 
         private void OnGetDevice(List<Device> obj)
@@ -46,23 +67,57 @@ namespace ADBGuiTool
             }
         }
 
-        private void DeviceGridCellClicked(object sender, DataGridViewCellEventArgs e)
+        #region UI Handler
+        #region Select Device
+        private void CheckDevice_Clicked(object sender, EventArgs e)
         {
-            if (e.RowIndex <= -1) return;
-            selectedRow = deviceGridView.Rows[e.RowIndex];
+            ClearDeviceData();
+            client.GetDevicesList(OnGetDevice);
         }
-
 
         private void SelectDeviceClicked(object sender, EventArgs e)
         {
             if (selectedRow is null) return;
-            selectedID =    selectedRow.Cells[0].Value.ToString();
-            selectedName =  selectedRow.Cells[1].Value.ToString();
+            selectedID = selectedRow.Cells[0].Value.ToString();
+            selectedName = selectedRow.Cells[1].Value.ToString();
             selectedModel = selectedRow.Cells[2].Value.ToString();
 
             textSelectedID.Text = selectedID;
             textSelectedName.Text = selectedName;
             textSelectedModel.Text = selectedModel;
         }
+
+        private void DeviceGridCellClicked(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex <= -1) return;
+            selectedRow = deviceGridView.Rows[e.RowIndex];
+        }
+        #endregion
+
+        #region APK Install
+        private void SelectAPK_Clicked(object sender, EventArgs e)
+        {
+            selectAPKDialog.ShowDialog();
+        }
+
+        private void ClearAPK_Clicked(object sender, EventArgs e)
+        {
+            ClearFileData();
+        }
+
+        private void InstallAPK_Clicked(object sender, EventArgs e)
+        {
+            foreach (var item in filesBinding)
+            {
+                Debug.WriteLine(item);
+            }
+        }
+
+        private void SelectAPK_OK(object sender, CancelEventArgs e)
+        {
+            PopulateDataListBox();
+        }
+        #endregion
+        #endregion
     }
 }
