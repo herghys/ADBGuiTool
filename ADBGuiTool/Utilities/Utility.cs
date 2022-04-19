@@ -11,9 +11,9 @@ namespace ADBGuiTool.Utilities
         const string PlatformToolsFolder = "adb";
 
         public static string ADBTool
-        { get => Path.Combine(Directory.GetCurrentDirectory(), PlatformToolsFolder, "adb.exe"); }
+        { get => Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), PlatformToolsFolder, "adb.exe"); }
 
         public static string Fastboot
-        { get => Path.Combine(Directory.GetCurrentDirectory(), PlatformToolsFolder, "fastboot.exe"); }
+        { get => Path.Combine(Path.GetDirectoryName(Application.ExecutablePath), PlatformToolsFolder, "fastboot.exe"); }
     }
 }

@@ -49,6 +49,17 @@ namespace ADBGuiTool
             fileListBox.DataSource = filesBinding;
         }
 
+        async void Install()
+        {
+            var command = "";
+            if (filesBinding.Count != 0 || !string.IsNullOrEmpty(selectedID))
+            foreach (var item in fileListBox.CheckedItems)
+            {
+                Debug.WriteLine(command);
+                await client.Install(selectedID, item.ToString());
+            }
+        }
+
         private void OnGetDevice(List<Device> obj)
         {
             devices = obj;
@@ -107,10 +118,7 @@ namespace ADBGuiTool
 
         private void InstallAPK_Clicked(object sender, EventArgs e)
         {
-            foreach (var item in filesBinding)
-            {
-                Debug.WriteLine(item);
-            }
+            Install();
         }
 
         private void SelectAPK_OK(object sender, CancelEventArgs e)

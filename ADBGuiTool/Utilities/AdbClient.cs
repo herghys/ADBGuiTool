@@ -100,6 +100,14 @@ namespace ADBGuiTool.Utilities
             string[] outLines = Output.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             return outLines.First();
         }
+
+        public async Task Install(string ID, string file, Action OnFinished = null)
+        {
+            var command = $@"-s {ID} install ""{file}""";
+            await Task.Run(() => RunCommand(command));
+            string[] outLines = Output.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
+            Debug.WriteLine(outLines.First());
+        }
         #endregion
     }
 }
