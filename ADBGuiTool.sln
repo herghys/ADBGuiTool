@@ -3,7 +3,11 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.2.32408.312
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADBGuiTool", "ADBGuiTool\ADBGuiTool.csproj", "{57025193-6C75-402D-BEC2-38AD4945D924}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADBGuiToolNetFramework", "ADBGuiToolNetFramework\ADBGuiToolNetFramework.csproj", "{57025193-6C75-402D-BEC2-38AD4945D924}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ADBGuiToolDotNet", "ADBGuiToolDotNet\ADBGuiToolDotNet.csproj", "{D771E5AC-73C3-4895-A4DF-EE5372392BC9}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PlatformToolsLib", "PlatformToolsLib\PlatformToolsLib.csproj", "{70D4B941-87D2-45AC-A215-CA2F882949A1}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -15,6 +19,14 @@ Global
 		{57025193-6C75-402D-BEC2-38AD4945D924}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{57025193-6C75-402D-BEC2-38AD4945D924}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{57025193-6C75-402D-BEC2-38AD4945D924}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D771E5AC-73C3-4895-A4DF-EE5372392BC9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D771E5AC-73C3-4895-A4DF-EE5372392BC9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D771E5AC-73C3-4895-A4DF-EE5372392BC9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D771E5AC-73C3-4895-A4DF-EE5372392BC9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{70D4B941-87D2-45AC-A215-CA2F882949A1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{70D4B941-87D2-45AC-A215-CA2F882949A1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{70D4B941-87D2-45AC-A215-CA2F882949A1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{70D4B941-87D2-45AC-A215-CA2F882949A1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
