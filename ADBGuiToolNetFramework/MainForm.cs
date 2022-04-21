@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
+using System.ComponentModel; 
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -17,26 +13,34 @@ namespace ADBGuiTool
     {
         #region Variable Declarations
         readonly ADBClient client = new ADBClient(Utility.ADBTool);
-        //readonly BindingList<string> apkBindingList = new BindingList<string>();//= new IList<string>()
-        //readonly BindingList<string> fileBindingList = new BindingList<string>();//= new IList<string>();
         List<Device> deviceList = new List<Device>();
-
         string selectedID, selectedName, selectedModel;
         DataGridViewRow selectedRow;
-
         #endregion
 
+        #region Main
         public MainForm()
         {
             InitializeComponent();
         }
+
+        #endregion
+
         #region Functions
+        async void ScanDevice()
+        {
+            ClearDeviceData();
+            SetProgressBar(1);
+
+            await client.GetDevicesList(OnADBStart, OnDeviceScanned, OnADBFinished, OnFailed);
+            
+            ResetProgressBar();
+        }
         void ClearDeviceData()
         {
             if (deviceList.Count > 0)
                 deviceList.Clear();
         }
-
         void PopulateListBox(FileType type)
         {
             if (type == FileType.Apk)
@@ -55,10 +59,9 @@ namespace ADBGuiTool
                     listBoxFile.Items.Add(files);
                 }
             }
-
+            
             ShowData(type);
         }
-
         void ShowData(FileType type)
         {
             if (type == FileType.Apk)
@@ -78,7 +81,6 @@ namespace ADBGuiTool
                 }
             }
         }
-
         void ClearFilesList(FileType type)
         {
             switch (type)
@@ -93,56 +95,112 @@ namespace ADBGuiTool
                     break;
             }
         }
-
         async void Push()
         {
             if (listBoxFile.Items.Count != 0 && !string.IsNullOrEmpty(selectedID))
+            {
+                SetProgressBar(listBoxFile.CheckedItems.Count);
                 foreach (string item in listBoxFile.CheckedItems)
                 {
-                    await client.Push(selectedID, item,OnADBStart, OnADBFinished);
+                    await client.Push(selectedID, item, OnADBStart, OnADBFinished);
                 }
+            }
             else
             {
-                var text = "";
-                if (string.IsNullOrEmpty(selectedID)) text = "You have your device with you?";
-                else if (listBoxAPK.Items.Count == 0) text = "What are you trying to Push?";
-                else text = "Bruh";
-
+                var text = CheckAgain();
                 toolStripLabelProgress.Text = text;
             }
+            await Task.Delay(500);
+            
+            ResetProgressBar();
         }
         async void Install()
         {
             if (listBoxAPK.Items.Count != 0 && !string.IsNullOrEmpty(selectedID))
+            {
+                SetProgressBar(listBoxAPK.CheckedItems.Count);
                 foreach (string item in listBoxAPK.CheckedItems)
                 {
-                    await client.Install(selectedID, item, OnADBStart, OnADBFinished);
+                    await client.Install(selectedID, item, OnADBStart, OnADBFinished, OnFailed);
                 }
+            }
             else
             {
-                var text = "";
-                if (string.IsNullOrEmpty(selectedID)) text = "You have your device with you?";
-                else if (listBoxAPK.Items.Count == 0) text = "What are you trying to Install?";
-                else text = "Bruh";
-
+                var text = CheckAgain();
                 toolStripLabelProgress.Text = text;
             }
-                
-                   
+            await Task.Delay(500);
+            
+            ResetProgressBar();
         }
 
-        private void OnADBStart(string obj)
+        private string CheckAgain()
         {
-            toolStripLabelProgress.Text = obj;
-        }
+            var text = "";
+            if (string.IsNullOrEmpty(selectedID)) text =  "You have your device with you?";
+            else if (listBoxAPK.Items.Count == 0) text =  "Check your files";
+            else text = "Bruh";
 
-        private void OnADBFinished(string obj)
+            ResetProgressBar();
+
+            return text;
+        }
+        void SetProgressBar(int max, int min = 0, int step = 1)
         {
-            toolStripLabelProgress.Text = obj;
+            toolStripProgressBar.Minimum = min;
+            toolStripProgressBar.Maximum = max+1;
+            toolStripProgressBar.Step = step;
+        }
+        async void ResetProgressBar()
+        {
+            await Task.Delay(1500);
+            toolStripProgressBar.Value = 0;
+            toolStripLabelProgress.Text = "Waiting for ADB Client";
+            
         }
         #endregion
 
-        #region Devices
+
+        #region Callbacks
+        private void OnDeviceScanned(string obj)
+        {
+            toolStripLabelProgress.Text = obj;
+        }
+        private void OnADBStart(string obj)
+        {
+            toolStripProgressBar.PerformStep();
+            toolStripLabelProgress.Text = obj;
+        }
+        private void OnADBFinished(string obj)
+        {
+            toolStripProgressBar.PerformStep();
+            toolStripLabelProgress.Text = obj;
+        }
+
+        private void OnADBFinished(List<Device> deviceList, string obj)
+        {
+            toolStripProgressBar.PerformStep();
+            this.deviceList = deviceList;
+
+            gridViewDevice.Columns["DeviceID"].DataPropertyName = "ID";
+            gridViewDevice.Columns["DeviceName"].DataPropertyName = "Name";
+            gridViewDevice.Columns["DeviceModel"].DataPropertyName = "Model";
+
+            gridViewDevice.DataSource = deviceList;
+
+            toolStripLabelProgress.Text = obj;
+
+            if (deviceList.Count > 0 || this.deviceList.Count > 0)
+                selectedRow = gridViewDevice.Rows[0];
+        }
+        private void OnFailed(string obj)
+        {
+            toolStripLabelProgress.Text = obj;
+            ResetProgressBar();
+        }
+        #endregion
+
+        #region UI Devices
         private void OnDeviceGridCell_Clicked(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex <= -1) return;
@@ -151,10 +209,8 @@ namespace ADBGuiTool
 
         private void OnCheckDevice_Clicked(object sender, EventArgs e)
         {
-            ClearDeviceData();
-            client.GetDevicesList(OnADBStart, OnDeviceScanned, OnADBFinished);
+            ScanDevice();
         }
-
         private void OnSelectDevice_Clicked(object sender, EventArgs e)
         {
             if (selectedRow is null) return;
@@ -167,39 +223,12 @@ namespace ADBGuiTool
             textSelectedModel.Text = selectedModel;
         }
 
-        #region Callbacks
-        private void OnDeviceScanned(List<Device> deviceList)
-        {
-            this.deviceList = deviceList;
-
-            gridViewDevice.Columns["DeviceID"].DataPropertyName = "ID";
-            gridViewDevice.Columns["DeviceName"].DataPropertyName = "Name";
-            gridViewDevice.Columns["DeviceModel"].DataPropertyName = "Model";
-
-            gridViewDevice.DataSource = deviceList;
-
-            if (deviceList.Count > 0 || this.deviceList.Count > 0)
-                selectedRow = gridViewDevice.Rows[0];
-        }
-        #endregion
         #endregion
 
-        #region Install APK
-        private void OnSelectAPK_Clicked(object sender, EventArgs e)
-        {
-            dialogSelectAPK.ShowDialog();
-        }
-
-        private void OnClearAPK_Clicked(object sender, EventArgs e)
-        {
-            ClearFilesList(FileType.Apk);
-        }
-
-        private void OnInstallAPK_Clicked(object sender, EventArgs e)
-        {
-            Install();
-        }
-
+        #region UI Install APK
+        private void OnSelectAPK_Clicked(object sender, EventArgs e) => dialogSelectAPK.ShowDialog();
+        private void OnClearAPK_Clicked(object sender, EventArgs e) => ClearFilesList(FileType.Apk);
+        private void OnInstallAPK_Clicked(object sender, EventArgs e) => Install();
         private void OnSelectAPK_OK(object sender, CancelEventArgs e)
         {
             var type = FileType.Apk;
@@ -207,21 +236,14 @@ namespace ADBGuiTool
         }
         #endregion
 
-        #region Push
-        private void OnSelectFile_Clicked(object sender, EventArgs e)
-        {
-            dialogSelectFile.ShowDialog();
-        }
+        #region UI DalogBox
 
-        private void OnClearFile_Clicked(object sender, EventArgs e)
-        {
-            ClearFilesList(FileType.Normal);
-        }
+        #endregion
 
-        private void OnPushFile_Clicked(object sender, EventArgs e)
-        {
-            Push();
-        }
+        #region UI Push
+        private void OnSelectFile_Clicked(object sender, EventArgs e) => dialogSelectFile.ShowDialog();
+        private void OnClearFile_Clicked(object sender, EventArgs e) => ClearFilesList(FileType.Normal);
+        private void OnPushFile_Clicked(object sender, EventArgs e) => Push();
 
         private void OnSelectFile_OK(object sender, CancelEventArgs e)
         {

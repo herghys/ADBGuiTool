@@ -61,6 +61,7 @@
             this.dialogSelectFile = new System.Windows.Forms.OpenFileDialog();
             this.toolTipPush = new System.Windows.Forms.ToolTip(this.components);
             this.statusStrip1 = new System.Windows.Forms.StatusStrip();
+            this.toolStripProgressBar = new System.Windows.Forms.ToolStripProgressBar();
             this.toolStripLabelProgress = new System.Windows.Forms.ToolStripStatusLabel();
             ((System.ComponentModel.ISupportInitialize)(this.splitContainerMain)).BeginInit();
             this.splitContainerMain.Panel1.SuspendLayout();
@@ -79,7 +80,7 @@
             // 
             // splitContainerMain
             // 
-            this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.splitContainerMain.Dock = System.Windows.Forms.DockStyle.Top;
             this.splitContainerMain.Location = new System.Drawing.Point(10, 10);
             this.splitContainerMain.Name = "splitContainerMain";
             // 
@@ -410,18 +411,25 @@
             // statusStrip1
             // 
             this.statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.toolStripProgressBar,
             this.toolStripLabelProgress});
             this.statusStrip1.Location = new System.Drawing.Point(10, 579);
             this.statusStrip1.Name = "statusStrip1";
+            this.statusStrip1.RenderMode = System.Windows.Forms.ToolStripRenderMode.Professional;
             this.statusStrip1.Size = new System.Drawing.Size(764, 22);
             this.statusStrip1.TabIndex = 6;
             this.statusStrip1.Text = "statusStrip1";
             // 
+            // toolStripProgressBar
+            // 
+            this.toolStripProgressBar.Name = "toolStripProgressBar";
+            this.toolStripProgressBar.Size = new System.Drawing.Size(100, 16);
+            // 
             // toolStripLabelProgress
             // 
             this.toolStripLabelProgress.Name = "toolStripLabelProgress";
-            this.toolStripLabelProgress.Size = new System.Drawing.Size(165, 17);
-            this.toolStripLabelProgress.Text = "Waiting for ADB Client To Run";
+            this.toolStripLabelProgress.Size = new System.Drawing.Size(126, 17);
+            this.toolStripLabelProgress.Text = "Waiting for ADB Client";
             // 
             // MainForm
             // 
@@ -493,6 +501,7 @@
         private System.Windows.Forms.ToolTip toolTipPush;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripLabelProgress;
+        private System.Windows.Forms.ToolStripProgressBar toolStripProgressBar;
     }
 }
 
