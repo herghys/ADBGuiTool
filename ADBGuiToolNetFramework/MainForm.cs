@@ -8,15 +8,15 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
-using ADBGuiTool.Data;
 using ADBGuiTool.Utilities;
+using PlatformToolsLib;
 
 namespace ADBGuiTool
 {
     public partial class MainForm : Form
     {
         #region Variable Declarations
-        readonly AdbClient client = new AdbClient();
+        readonly ADBClient client = new ADBClient(Utility.ADBTool);
         //readonly BindingList<string> apkBindingList = new BindingList<string>();//= new IList<string>()
         //readonly BindingList<string> fileBindingList = new BindingList<string>();//= new IList<string>();
         List<Device> deviceList = new List<Device>();
