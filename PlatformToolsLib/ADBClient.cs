@@ -60,7 +60,7 @@ namespace PlatformToolsLib
             get => adbTimeout > 0 ? adbTimeout : 5000;
             set => adbTimeout = value;
         }
-
+        bool scanningDevice =false;
         public string ADBPath { get; private set; }
 
         public string Output;
@@ -102,7 +102,12 @@ namespace PlatformToolsLib
             List<Device> devices = new List<Device>();
 
             var command = "devices";
-            await Task.Run(() => RunCommand(command));
+            if (!scanningDevice)
+            {
+                scanningDevice = true;
+                await Task.Run(() => RunCommand(command));
+                scanningDevice = false;
+            }
 
             var outLines = Output.Split(new[] { Environment.NewLine }, StringSplitOptions.RemoveEmptyEntries);
             var IDs = outLines.Skip(1).ToList();
@@ -157,8 +162,8 @@ namespace PlatformToolsLib
             OnStart($"Installing: {filename}");
             var command = $@"-s {ID} install ""{file}""";
             await Task.Run(() => RunCommand(command));
-            if (Output.Contains("Successfully".ToLowerInvariant()))
-                OnFinished($"{file} Installed Successfully ");
+            if (Output.Contains("Success"))
+                OnFinished($"{filename} Installed Successfully ");
         }
         #endregion
     }

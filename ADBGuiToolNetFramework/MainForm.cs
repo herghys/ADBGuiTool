@@ -96,19 +96,38 @@ namespace ADBGuiTool
 
         async void Push()
         {
-            if (listBoxFile.Items.Count != 0 || !string.IsNullOrEmpty(selectedID))
+            if (listBoxFile.Items.Count != 0 && !string.IsNullOrEmpty(selectedID))
                 foreach (string item in listBoxFile.CheckedItems)
                 {
                     await client.Push(selectedID, item,OnADBStart, OnADBFinished);
                 }
+            else
+            {
+                var text = "";
+                if (string.IsNullOrEmpty(selectedID)) text = "You have your device with you?";
+                else if (listBoxAPK.Items.Count == 0) text = "What are you trying to Push?";
+                else text = "Bruh";
+
+                toolStripLabelProgress.Text = text;
+            }
         }
         async void Install()
         {
-            if (listBoxAPK.Items.Count != 0 || !string.IsNullOrEmpty(selectedID))
+            if (listBoxAPK.Items.Count != 0 && !string.IsNullOrEmpty(selectedID))
                 foreach (string item in listBoxAPK.CheckedItems)
                 {
                     await client.Install(selectedID, item, OnADBStart, OnADBFinished);
                 }
+            else
+            {
+                var text = "";
+                if (string.IsNullOrEmpty(selectedID)) text = "You have your device with you?";
+                else if (listBoxAPK.Items.Count == 0) text = "What are you trying to Install?";
+                else text = "Bruh";
+
+                toolStripLabelProgress.Text = text;
+            }
+                
                    
         }
 

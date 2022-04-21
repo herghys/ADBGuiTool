@@ -76,8 +76,9 @@
     <Prefer32Bit>true</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PlatformToolsLib">
-      <HintPath>..\PlatformToolsLib\bin\Debug\PlatformToolsLib.dll</HintPath>
+    <Reference Include="PlatformToolsLib, Version=1.0.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\PlatformToolsLib\bin\Release\PlatformToolsLib.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
