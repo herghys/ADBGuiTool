@@ -1,12 +1,9 @@
 ﻿using System;
-using System.IO;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Shapes;
 using System.Diagnostics;
 using Path = System.IO.Path;
 
@@ -96,7 +93,7 @@ namespace PlatformToolsLib
         #endregion
 
         #region ADB Commands
-        public async void GetDevicesList(Action<string> OnStart, Action<List<Device>> OnDeviceScanned, Action<string> OnFinished)
+        public async Task GetDevicesList(Action<string> OnStart, Action<string> OnDeviceScanned, Action<List<Device>, string> OnFinished, Action<string> OnFailed)
         {
             OnStart("Scanning for device");
             List<Device> devices = new List<Device>();
@@ -124,10 +121,12 @@ namespace PlatformToolsLib
                 device.Model = await GetDeviceModel(IDs[i]);
 
                 devices.Add(device);
-                OnFinished($"ID Found: {device.ID}");
+                OnDeviceScanned($"ID Found: {device.ID}");
             }
             if (devices.Count > 0)
-            OnDeviceScanned(devices);
+                OnFinished(devices, $"Found {devices.Count} devices");
+            else
+                OnFailed("No device found");
         }
 
         public async Task<string> GetDeviceName(string ID)
@@ -146,7 +145,7 @@ namespace PlatformToolsLib
             return outLines.First();
         }
 
-        public async Task Push(string ID, string file, Action<string> OnStart, Action<string> OnFinished, string path = "/storage/emulated/0/Download/")
+        public async Task Push(string ID, string file, Action<string> OnStart, Action<string> OnFinished, Action<string> OnFailed = null, string path = "/storage/emulated/0/Download/")
         {
             var filename = Path.GetFileName(file);
             OnStart($"Pushing {filename} to {path}");
@@ -156,14 +155,22 @@ namespace PlatformToolsLib
             OnFinished($"All Files Successfully Pushed to Download");
         }
 
-        public async Task Install(string ID, string file, Action<string> OnStart, Action<string> OnFinished)
+        public async Task Install(string ID, string file, Action<string> OnStart, Action<string> OnFinished, Action<string> OnFailed)
         {
             var filename = Path.GetFileName(file);
-            OnStart($"Installing: {filename}");
             var command = $@"-s {ID} install ""{file}""";
-            await Task.Run(() => RunCommand(command));
-            if (Output.Contains("Success"))
-                OnFinished($"{filename} Installed Successfully ");
+            OnStart($"Installing: {filename}");
+
+            try
+            {
+                await Task.Run(() => RunCommand(command));
+                if (Output.Contains("Success"))
+                    OnFinished($"{filename} Installed Successfully ");
+            }
+            catch (Exception)
+            {
+                OnFailed($"Error when installing {filename} to device");
+            }            
         }
         #endregion
     }
